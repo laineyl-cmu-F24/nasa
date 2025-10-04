@@ -1,23 +1,28 @@
 // CSV解析工具
 export function parseCSV(csvText) {
-  const lines = csvText.trim().split('\n')
+  const lines = csvText.trim().split(/\r?\n/)
   const headers = lines[0].split(',')
   const data = []
-  
+
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i]
     if (!line.trim()) continue
-    
+
     // 处理包含逗号的标题（用引号包围的）
     const values = []
     let currentValue = ''
     let inQuotes = false
-    
+
     for (let j = 0; j < line.length; j++) {
       const char = line[j]
-      
+
       if (char === '"') {
-        inQuotes = !inQuotes
+        if (j > 0 && line[j - 1] === '"') {
+          // 双引号处理
+          currentValue += '"'
+        } else {
+          inQuotes = !inQuotes
+        }
       } else if (char === ',' && !inQuotes) {
         values.push(currentValue.trim())
         currentValue = ''
@@ -26,15 +31,16 @@ export function parseCSV(csvText) {
       }
     }
     values.push(currentValue.trim())
-    
-    if (values.length >= 2) {
+
+    if (values.length >= 3) {
       data.push({
         title: values[0].replace(/^"|"$/g, ''), // 移除引号
-        link: values[1]
+        link: values[1],
+        inferredOrganism: values[2].replace(/^"|"$/g, '') // 添加推断的生物体
       })
     }
   }
-  
+
   return data
 }
 
@@ -47,7 +53,7 @@ export function extractYear(title) {
 // 从标题中推断生物体类型
 export function inferOrganism(title) {
   const titleLower = title.toLowerCase()
-  
+
   if (titleLower.includes('mouse') || titleLower.includes('mice') || titleLower.includes('murine')) {
     return 'Mouse'
   } else if (titleLower.includes('human') || titleLower.includes('astronaut') || titleLower.includes('crew')) {
@@ -72,7 +78,7 @@ export function inferOrganism(title) {
 // 从标题中推断研究结果
 export function inferOutcome(title) {
   const titleLower = title.toLowerCase()
-  
+
   if (titleLower.includes('bone') || titleLower.includes('skeletal') || titleLower.includes('osteoporosis')) {
     return 'Bone loss/remodeling'
   } else if (titleLower.includes('immune') || titleLower.includes('immunity') || titleLower.includes('lymphocyte')) {
@@ -94,4 +100,12 @@ export function inferOutcome(title) {
   } else {
     return 'General spaceflight effects'
   }
+}
+
+// Added default export for the module
+export default {
+  parseCSV,
+  extractYear,
+  inferOrganism,
+  inferOutcome
 }
