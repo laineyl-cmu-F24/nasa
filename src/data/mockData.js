@@ -27,3 +27,33 @@ export const organismStats = [
   { name: "Mouse", value: 20 },
   { name: "Plant", value: 8 },
 ]
+
+export const mockResearchGaps = [
+  {
+    id: 1,
+    type: "temporal",
+    icon: "📉",
+    title: "Few studies on plants after 2021",
+    description: "potential gap for Mars agriculture",
+    severity: "medium",
+    category: "Plant Biology"
+  },
+  {
+    id: 2,
+    type: "methodological",
+    icon: "⚠️",
+    title: "Limited combined radiation + microgravity studies",
+    description: "Most studies focus on single stress factors",
+    severity: "high",
+    category: "Space Environment"
+  },
+  {
+    id: 3,
+    type: "duration",
+    icon: "🧬",
+    title: "Sparse long-duration (>180 days) immune system data",
+    description: "Limited data for extended space missions",
+    severity: "high",
+    category: "Human Physiology"
+  }
+]

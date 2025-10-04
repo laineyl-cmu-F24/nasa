@@ -20,7 +20,7 @@ export default function App() {
         <OrganismChart data={organismStats} />
       </div>
 
-      <ResearchGaps />
+      <ResearchGaps searchQuery={query} />
     </div>
   )
 }
