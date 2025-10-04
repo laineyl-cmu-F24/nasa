@@ -7,7 +7,7 @@ export default function SearchBar({ query, onQueryChange }) {
       <input
         type="text"
         className="bg-transparent outline-none px-3 w-full"
-        placeholder="Search publications (e.g., bone, immune, plant)..."
+        placeholder="Search publications (title, organism, outcome, year)..."
         value={query}
         onChange={(e) => onQueryChange(e.target.value)}
       />

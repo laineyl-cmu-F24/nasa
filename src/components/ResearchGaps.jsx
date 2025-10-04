@@ -10,7 +10,7 @@ export default function ResearchGaps() {
       <ul className="list-disc list-inside space-y-1 text-slate-200">
         <li>📉 Few studies on plants after 2021 (potential gap for Mars agriculture)</li>
         <li>⚠️ Limited combined radiation + microgravity studies</li>
-        <li>🧬 Sparse long-duration (>180 days) immune system data</li>
+        <li>🧬 Sparse long-duration (&gt;180 days) immune system data</li>
       </ul>
     </div>
   )
