@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 
 const norm = (s) =>
   (s ?? "").toString().toLowerCase().normalize("NFKC").trim()
@@ -33,8 +33,14 @@ function diceBigram(a, b) {
   return (2 * inter) / (A.length + B.length)
 }
 
-export function useSearch(publications) {
+export function useSearch(publications, itemsPerPage = 10) {
   const [query, setQuery] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // 当搜索查询改变时，重置到第一页
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [query])
 
   const filteredPublications = useMemo(() => {
     if (!query.trim()) return publications
@@ -67,9 +73,28 @@ export function useSearch(publications) {
       .sort((a, b) => b._score - a._score)
   }, [publications, query])
 
+  // 计算分页数据
+  const totalItems = filteredPublications.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentPageData = filteredPublications.slice(startIndex, endIndex)
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page)
+    }
+  }
+
   return {
     query,
     setQuery,
-    filteredPublications,
+    filteredPublications: currentPageData,
+    allFilteredPublications: filteredPublications,
+    currentPage,
+    totalPages,
+    totalItems,
+    itemsPerPage,
+    onPageChange: handlePageChange,
   }
 }
