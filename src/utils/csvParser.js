@@ -1,4 +1,3 @@
-// CSV解析工具
 export function parseCSV(csvText) {
   const lines = csvText.trim().split(/\r?\n/)
   const headers = lines[0].split(',')
@@ -8,7 +7,6 @@ export function parseCSV(csvText) {
     const line = lines[i]
     if (!line.trim()) continue
 
-    // 处理包含逗号的标题（用引号包围的）
     const values = []
     let currentValue = ''
     let inQuotes = false
@@ -18,7 +16,6 @@ export function parseCSV(csvText) {
 
       if (char === '"') {
         if (j > 0 && line[j - 1] === '"') {
-          // 双引号处理
           currentValue += '"'
         } else {
           inQuotes = !inQuotes
@@ -34,9 +31,9 @@ export function parseCSV(csvText) {
 
     if (values.length >= 3) {
       data.push({
-        title: values[0].replace(/^"|"$/g, ''), // 移除引号
+        title: values[0].replace(/^"|"$/g, ''),
         link: values[1],
-        inferredOrganism: values[2].replace(/^"|"$/g, '') // 添加推断的生物体
+        inferredOrganism: values[2].replace(/^"|"$/g, '')
       })
     }
   }

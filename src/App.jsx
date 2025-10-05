@@ -18,7 +18,7 @@ export default function App() {
     totalItems,
     itemsPerPage,
     onPageChange
-  } = useSearch(mockPubs, 8) // 每页显示8条结果
+  } = useSearch(mockPubs, 8)
 
   useEffect(() => {
     console.log("Filtered Publications:", filteredPublications)
