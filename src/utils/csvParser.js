@@ -1,3 +1,42 @@
+function cleanAbstract(raw) {
+  if (!raw) return "";
+
+  const cutMarkers = [
+    "Conflict of interest",
+    "Competing Interests",
+    "Funding:",
+    "Grant Support:",
+    "Correspondence to:",
+    "Data Availability:",
+    "Acknowledgments:",
+    "Ethics Statement:"
+  ];
+
+  const lines = raw.split(/\r?\n/).map(l => l.trim());
+  let startIdx = 0;
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].toLowerCase().startsWith("author information:") || 
+        lines[i].toLowerCase().startsWith("author:")) {
+      let j = i + 1;
+      while (j < lines.length && lines[j] !== "") {
+        j++;
+      }
+      startIdx = j + 1;
+      break;
+    }
+  }
+  let endIdx = lines.length;
+  for (let i = startIdx; i < lines.length; i++) {
+    if (cutMarkers.some(m => lines[i].toLowerCase().startsWith(m.toLowerCase()))) {
+      endIdx = i;
+      break;
+    }
+  }
+
+  return lines.slice(startIdx, endIdx).join(" ").trim();
+}
+
+
 export function parseCSV(csvText) {
   const lines = csvText.trim().split(/\r?\n/)
   const headers = lines[0].split(',')
@@ -16,7 +55,6 @@ export function parseCSV(csvText) {
     let inQuotes = false
     let currentLine = line
 
-    // 处理可能跨多行的字段
     while (i < lines.length) {
       const lineToProcess = lines[i]
       
@@ -25,7 +63,6 @@ export function parseCSV(csvText) {
 
         if (char === '"') {
           if (j > 0 && lineToProcess[j - 1] === '"') {
-            // 处理转义的引号 ""
             currentValue += '"'
           } else {
             inQuotes = !inQuotes
@@ -38,17 +75,14 @@ export function parseCSV(csvText) {
         }
       }
       
-      // 如果当前行在引号内结束，需要继续读取下一行
       if (inQuotes) {
         currentValue += '\n'
         i++
       } else {
-        // 当前行处理完毕，跳出循环
         break
       }
     }
     
-    // 添加最后一个字段
     values.push(currentValue.trim())
 
     if (values.length >= 8) {
@@ -60,7 +94,7 @@ export function parseCSV(csvText) {
         pmid: values[4].replace(/^"|"$/g, ''),
         pubDate: values[5].replace(/^"|"$/g, ''),
         firstAuthor: values[6].replace(/^"|"$/g, ''),
-        abstract: values[7].replace(/^"|"$/g, '')
+        abstract: cleanAbstract(values[7].replace(/^"|"$/g, ''))
       })
     }
     
@@ -70,13 +104,11 @@ export function parseCSV(csvText) {
   return data
 }
 
-// 从标题中提取年份
 export function extractYear(title) {
   const yearMatch = title.match(/\b(19|20)\d{2}\b/)
   return yearMatch ? parseInt(yearMatch[0]) : null
 }
 
-// 从标题中推断生物体类型
 export function inferOrganism(title) {
   const titleLower = title.toLowerCase()
 
@@ -101,7 +133,6 @@ export function inferOrganism(title) {
   }
 }
 
-// 从标题中推断研究结果
 export function inferOutcome(title) {
   const titleLower = title.toLowerCase()
 
@@ -128,7 +159,6 @@ export function inferOutcome(title) {
   }
 }
 
-// Added default export for the module
 export default {
   parseCSV,
   extractYear,
