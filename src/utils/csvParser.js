@@ -2,40 +2,69 @@ export function parseCSV(csvText) {
   const lines = csvText.trim().split(/\r?\n/)
   const headers = lines[0].split(',')
   const data = []
-
-  for (let i = 1; i < lines.length; i++) {
+  
+  let i = 1
+  while (i < lines.length) {
     const line = lines[i]
-    if (!line.trim()) continue
+    if (!line.trim()) {
+      i++
+      continue
+    }
 
     const values = []
     let currentValue = ''
     let inQuotes = false
+    let currentLine = line
 
-    for (let j = 0; j < line.length; j++) {
-      const char = line[j]
+    // 处理可能跨多行的字段
+    while (i < lines.length) {
+      const lineToProcess = lines[i]
+      
+      for (let j = 0; j < lineToProcess.length; j++) {
+        const char = lineToProcess[j]
 
-      if (char === '"') {
-        if (j > 0 && line[j - 1] === '"') {
-          currentValue += '"'
+        if (char === '"') {
+          if (j > 0 && lineToProcess[j - 1] === '"') {
+            // 处理转义的引号 ""
+            currentValue += '"'
+          } else {
+            inQuotes = !inQuotes
+          }
+        } else if (char === ',' && !inQuotes) {
+          values.push(currentValue.trim())
+          currentValue = ''
         } else {
-          inQuotes = !inQuotes
+          currentValue += char
         }
-      } else if (char === ',' && !inQuotes) {
-        values.push(currentValue.trim())
-        currentValue = ''
+      }
+      
+      // 如果当前行在引号内结束，需要继续读取下一行
+      if (inQuotes) {
+        currentValue += '\n'
+        i++
       } else {
-        currentValue += char
+        // 当前行处理完毕，跳出循环
+        break
       }
     }
+    
+    // 添加最后一个字段
     values.push(currentValue.trim())
 
-    if (values.length >= 3) {
+    if (values.length >= 8) {
       data.push({
         title: values[0].replace(/^"|"$/g, ''),
-        link: values[1],
-        inferredOrganism: values[2].replace(/^"|"$/g, '')
+        link: values[1].replace(/^"|"$/g, ''),
+        inferredOrganism: values[2].replace(/^"|"$/g, ''),
+        pmcid: values[3].replace(/^"|"$/g, ''),
+        pmid: values[4].replace(/^"|"$/g, ''),
+        pubDate: values[5].replace(/^"|"$/g, ''),
+        firstAuthor: values[6].replace(/^"|"$/g, ''),
+        abstract: values[7].replace(/^"|"$/g, '')
       })
     }
+    
+    i++
   }
 
   return data

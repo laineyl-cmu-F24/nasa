@@ -56,7 +56,7 @@ export default function Pagination({
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
       {/* Results count */}
       <div className="text-sm text-slate-400">
-        Showing {startItem}-{endItem} of {totalItems} results
+        {startItem}-{endItem} of {totalItems} results
       </div>
 
       {/* Pagination controls */}

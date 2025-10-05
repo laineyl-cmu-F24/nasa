@@ -79,15 +79,17 @@ export default function ResearchGaps({ publications, role }) {
         <Microscope className="w-6 h-6 text-green-400" />
         <span>Potential Research Gaps</span>
       </h2>
-      {dynamicGaps.length === 0 ? (
-        <p className="text-slate-300 text-sm">No obvious gaps detected by baseline rules.</p>
-      ) : (
-        <ul className="list-disc list-inside space-y-1 text-slate-200">
-          {dynamicGaps.map((g, i) => (
-            <li key={i}>{g}</li>
-          ))}
-        </ul>
-      )}
+        <div className="max-h-[730px] overflow-y-auto">
+        {dynamicGaps.length === 0 ? (
+          <p className="text-slate-300 text-sm">No obvious gaps detected by baseline rules.</p>
+        ) : (
+          <ul className="list-disc list-inside space-y-1 text-slate-200 pr-2">
+            {dynamicGaps.map((g, i) => (
+              <li key={i}>{g}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }
