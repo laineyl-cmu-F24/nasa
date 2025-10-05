@@ -5,7 +5,6 @@ import PublicationResults from "./components/PublicationResults"
 import OrganismChart from "./components/OrganismChart"
 import ResearchGaps from "./components/ResearchGaps"
 import Footer from "./components/Footer"
-import About from "./components/About"
 import { useSearch } from "./hooks/useSearch"
 import { mockPubs } from "./data/mockData"
 
@@ -36,32 +35,6 @@ export default function App() {
     return Object.entries(stats).map(([name, value]) => ({ name, value }))
   }, [allFilteredPublications])
 
-  const globalSummary = useMemo(() => {
-    const totalCount = mockPubs.length
-    const organismCounts = {}
-    const outcomeCounts = {}
-
-    mockPubs.forEach((p) => {
-      const org = p.organism || 'Unknown'
-      organismCounts[org] = (organismCounts[org] || 0) + 1
-      const out = p.outcome || 'General spaceflight effects'
-      outcomeCounts[out] = (outcomeCounts[out] || 0) + 1
-    })
-
-    const uniqueOrganismsCount = Object.keys(organismCounts).length
-
-    const topOrganisms = Object.entries(organismCounts)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5)
-
-    const topOutcomes = Object.entries(outcomeCounts)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 5)
-
-    return { totalCount, uniqueOrganismsCount, topOrganisms, topOutcomes }
-  }, [])
 
   return (
     <div className="relative min-h-screen text-white flex flex-col">
@@ -91,8 +64,7 @@ export default function App() {
           />
           <div className="space-y-6">
             <OrganismChart data={dynamicOrganismStats} />
-            <ResearchGaps />
-            <About summary={globalSummary} />
+            <ResearchGaps publications={allFilteredPublications} />
           </div>
         </div>
       </main>
