@@ -4,6 +4,8 @@ import SearchBar from "./components/SearchBar"
 import PublicationResults from "./components/PublicationResults"
 import OrganismChart from "./components/OrganismChart"
 import ResearchGaps from "./components/ResearchGaps"
+import Footer from "./components/Footer"
+import About from "./components/About"
 import { useSearch } from "./hooks/useSearch"
 import { mockPubs } from "./data/mockData"
 
@@ -18,7 +20,7 @@ export default function App() {
     totalItems,
     itemsPerPage,
     onPageChange
-  } = useSearch(mockPubs, 8)
+  } = useSearch(mockPubs, 7)
 
   useEffect(() => {
     console.log("Filtered Publications:", filteredPublications)
@@ -34,8 +36,35 @@ export default function App() {
     return Object.entries(stats).map(([name, value]) => ({ name, value }))
   }, [allFilteredPublications])
 
+  const globalSummary = useMemo(() => {
+    const totalCount = mockPubs.length
+    const organismCounts = {}
+    const outcomeCounts = {}
+
+    mockPubs.forEach((p) => {
+      const org = p.organism || 'Unknown'
+      organismCounts[org] = (organismCounts[org] || 0) + 1
+      const out = p.outcome || 'General spaceflight effects'
+      outcomeCounts[out] = (outcomeCounts[out] || 0) + 1
+    })
+
+    const uniqueOrganismsCount = Object.keys(organismCounts).length
+
+    const topOrganisms = Object.entries(organismCounts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5)
+
+    const topOutcomes = Object.entries(outcomeCounts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 5)
+
+    return { totalCount, uniqueOrganismsCount, topOrganisms, topOutcomes }
+  }, [])
+
   return (
-    <div className="relative min-h-screen text-white">
+    <div className="relative min-h-screen text-white flex flex-col">
       <video
         autoPlay
         loop
@@ -47,22 +76,27 @@ export default function App() {
         Your browser does not support the video tag.
       </video>
       <Header />
-      
-      <SearchBar query={query} onQueryChange={setQuery} />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <PublicationResults 
-          publications={filteredPublications}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
-          onPageChange={onPageChange}
-        />
-        <OrganismChart data={dynamicOrganismStats} />
-      </div>
+      <main className="max-w-6xl mx-auto px-4 flex-1 w-full">
+        <SearchBar query={query} onQueryChange={setQuery} />
 
-      <ResearchGaps />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <PublicationResults 
+            publications={filteredPublications}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            onPageChange={onPageChange}
+          />
+          <div className="space-y-6">
+            <OrganismChart data={dynamicOrganismStats} />
+            <ResearchGaps />
+            <About summary={globalSummary} />
+          </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   )
 }

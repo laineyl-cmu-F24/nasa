@@ -2,7 +2,7 @@ import { Microscope } from "lucide-react"
 
 export default function ResearchGaps() {
   return (
-    <div className="mt-10 bg-slate-700 rounded-xl p-6">
+    <div className="bg-slate-700 rounded-xl p-6">
       <h2 className="text-xl font-semibold mb-3 flex items-center space-x-2">
         <Microscope className="w-6 h-6 text-green-400" />
         <span>Potential Research Gaps</span>
