@@ -6,7 +6,7 @@ import OrganismChart from "./components/OrganismChart"
 import ResearchGaps from "./components/ResearchGaps"
 import Footer from "./components/Footer"
 import { useSearch } from "./hooks/useSearch"
-import { mockPubs } from "./data/mockData"
+import { mockPubs } from "./data/data"
 
 export default function App() {
   const { 
@@ -75,7 +75,7 @@ export default function App() {
           Your browser does not support the video tag.
         </video>
         
-        <main className="max-w-6xl mx-auto px-4 py-12 relative z-10 pt-20">
+        <main className="max-w-6xl mx-auto px-4 mt-8 mb-6 relative z-10 pt-20">
           <div className="mb-8">
             <SearchBar query={query} onQueryChange={setQuery} />
           </div>

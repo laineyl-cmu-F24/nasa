@@ -16,11 +16,3 @@ export const mockPubs = parsedCSV.map((entry) => ({
   pmid: entry.pmid,
   abstract: entry.abstract
 }))
-
-export const organismStats = [
-  { name: "Mouse", value: 8 },
-  { name: "Plant", value: 6 },
-  { name: "Drosophila", value: 2 },
-  { name: "Human", value: 1 },
-  { name: "Other", value: 3 }
-]

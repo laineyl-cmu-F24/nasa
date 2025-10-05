@@ -30,14 +30,14 @@ export default function HeroHeader({ onScrollToContent }) {
       setScrollY(currentScrollY)
       setIsScrolled(currentScrollY > 5)
       
-      // Auto scroll to content when any scroll is detected in hero section
+      // 第一次滚动时触发自动滚动效果
       if (currentScrollY > 0 && currentScrollY < window.innerHeight && !hasAutoScrolled) {
         setHasAutoScrolled(true)
         // Custom smooth scroll from current position
-        const startPosition = currentScrollY // Use current scroll position
+        const startPosition = currentScrollY
         const targetPosition = window.innerHeight
         const distance = targetPosition - startPosition
-        const duration = 1500 // 1.5 seconds
+        const duration = 2500 // 1.5 seconds
         let startTime = null
 
         function animation(currentTime) {
@@ -132,8 +132,13 @@ export default function HeroHeader({ onScrollToContent }) {
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-4">
         {/* Main Title */}
-        <div className="mb-8 transform transition-all duration-1000" style={{
-          transform: `translateY(${scrollY * 0.5}px) scale(${1 - scrollY * 0.0001})`
+        <div className="mb-8" style={{
+          transform: hasAutoScrolled 
+            ? `translateY(${scrollY * 0.3}px) scale(${Math.max(0.8, 1 - scrollY * 0.0003)})`
+            : `translateY(${scrollY * 0.5}px) scale(${1 - scrollY * 0.0001})`,
+          opacity: hasAutoScrolled 
+            ? Math.max(0.3, 1 - scrollY * 0.001)
+            : 1
         }}>
           <h1 className="text-6xl md:text-8xl font-bold text-white mb-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
             NASA
@@ -148,10 +153,14 @@ export default function HeroHeader({ onScrollToContent }) {
 
         {/* Feature Cards */}
         <div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto transform transition-all duration-1000"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto"
           style={{
-            transform: `translateY(${scrollY * 0.3}px) scale(${1 - scrollY * 0.0002})`,
-            opacity: Math.max(0, 1 - scrollY * 0.002)
+            transform: hasAutoScrolled
+              ? `translateY(${scrollY * 0.2}px) scale(${Math.max(0.9, 1 - scrollY * 0.0002)})`
+              : `translateY(${scrollY * 0.3}px) scale(${1 - scrollY * 0.0002})`,
+            opacity: hasAutoScrolled
+              ? Math.max(0.2, 1 - scrollY * 0.0015)
+              : Math.max(0, 1 - scrollY * 0.002)
           }}
         >
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
@@ -173,10 +182,14 @@ export default function HeroHeader({ onScrollToContent }) {
 
         {/* Scroll Indicator */}
         <div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 transition-all duration-1000"
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
           style={{
-            transform: `translateX(-50%) translateY(${scrollY * 0.2}px)`,
-            opacity: Math.max(0, 1 - scrollY * 0.003)
+            transform: hasAutoScrolled
+              ? `translateX(-50%) translateY(${scrollY * 0.1}px)`
+              : `translateX(-50%) translateY(${scrollY * 0.2}px)`,
+            opacity: hasAutoScrolled
+              ? Math.max(0, 1 - scrollY * 0.002)
+              : Math.max(0, 1 - scrollY * 0.003)
           }}
         >
           <button
