@@ -35,7 +35,17 @@ export default function App() {
   }, [allFilteredPublications])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-white p-8">
+    <div className="relative min-h-screen text-white">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover object-top -z-10">
+
+        <source src="src/galaxy_space.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
       <Header />
       
       <SearchBar query={query} onQueryChange={setQuery} />

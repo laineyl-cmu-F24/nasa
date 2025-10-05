@@ -37,7 +37,6 @@ export function useSearch(publications, itemsPerPage = 10) {
   const [query, setQuery] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
 
-  // 当搜索查询改变时，重置到第一页
   useEffect(() => {
     setCurrentPage(1)
   }, [query])
@@ -69,11 +68,10 @@ export function useSearch(publications, itemsPerPage = 10) {
 
         return { ...p, _score: score }
       })
-      .filter((p) => p._score > 0)
+      .filter((p) => p._score > 0.3)
       .sort((a, b) => b._score - a._score)
   }, [publications, query])
 
-  // 计算分页数据
   const totalItems = filteredPublications.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
