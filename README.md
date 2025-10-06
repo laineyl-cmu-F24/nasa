@@ -97,6 +97,40 @@ npm run dev
 # App will run on http://localhost:5173
 ```
 
+### 4. Environment Variables
+Frontend:
+```
+VITE_API_BASE_URL=http://localhost:8000
+```
+Backend (create `src/api/.env`):
+```
+GEMINI_API_KEY=your_api_key
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+```
+
+---
+
+## 🌐 Deploy to Render
+
+Create two Web Services using this repo:
+
+1) API service (Python)
+- Root directory: `src/api`
+- Build command: `pip install -r requirements.txt`
+- Start command: `uvicorn summarize:app --host 0.0.0.0 --port 8000`
+- Environment variables:
+  - `GEMINI_API_KEY` (required)
+  - `ALLOWED_ORIGINS=https://<your-web>.onrender.com`
+
+2) Web service (Node)
+- Root directory: project root
+- Build command: `npm ci && npm run build`
+- Start command: `npm run preview -- --host 0.0.0.0 --port 10000`
+- Environment variables:
+  - `VITE_API_BASE_URL=https://<your-api>.onrender.com`
+
+Note: Vite embeds `VITE_API_BASE_URL` at build time. Rebuild the web service if you change the API URL.
+
 ---
 
 ## 📁 Project Structure

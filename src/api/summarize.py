@@ -10,11 +10,15 @@ load_dotenv()
 
 app = FastAPI()
 
-# CORS setup for local dev (adjust origins for production)
+# CORS setup (reads from env, falls back to permissive in dev)
+raw_origins = os.getenv("ALLOWED_ORIGINS", "*")
+allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
+allow_all = allowed_origins == ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
-    allow_credentials=True,
+    allow_origins=["*"] if allow_all else allowed_origins,
+    allow_credentials=False if allow_all else True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
