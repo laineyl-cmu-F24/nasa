@@ -39,6 +39,16 @@ class SummarizeResponse(BaseModel):
     timeline: list[str]
     keywords: list[str]
 
+class ResearchGapRequest(BaseModel):
+    publications: list[dict]
+    rule_based_gaps: list[str]
+
+class ResearchGapResponse(BaseModel):
+    semantic_analysis: str
+    key_insights: list[str]
+    future_directions: list[str]
+    priority_areas: list[str]
+
 @app.post("/api/summarize", response_model=SummarizeResponse)
 async def summarize_text(req: SummarizeRequest):
     if not req.text or len(req.text.strip()) < 50:
@@ -110,6 +120,88 @@ Text to summarize:
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Summarization failed: {str(e)}")
+
+@app.post("/api/analyze-gaps", response_model=ResearchGapResponse)
+async def analyze_research_gaps(req: ResearchGapRequest):
+    if not req.publications or len(req.publications) == 0:
+        raise HTTPException(status_code=400, detail="No publications provided")
+    
+    # Prepare summary of publications for AI analysis
+    pub_summary = []
+    for i, pub in enumerate(req.publications[:100]):  # Limit to avoid token overflow
+        title = pub.get('title', 'Untitled')
+        organism = pub.get('organism', 'Unknown')
+        year = pub.get('year', 'N/A')
+        outcome = pub.get('outcome', 'N/A')
+        pub_summary.append(f"- [{year}] {organism}: {title[:80]} → {outcome[:60]}")
+    
+    pub_text = "\n".join(pub_summary[:50])  # Limit to 50 publications
+    gaps_text = "\n".join(req.rule_based_gaps) if req.rule_based_gaps else "No rule-based gaps detected"
+    
+    prompt = f"""You are an expert NASA space biology research analyst. Analyze the following research corpus and identified gaps to provide deep insights.
+
+**Rule-Based Gaps Detected:**
+{gaps_text}
+
+**Sample Publications from Corpus (showing {len(pub_summary)} out of {len(req.publications)} total):**
+{pub_text}
+
+Your task: Provide a comprehensive research gap analysis in JSON format with these sections:
+
+1. **semantic_analysis** — A 2-3 sentence high-level interpretation of the research landscape and what the patterns reveal about NASA's space biology research priorities and blind spots.
+
+2. **key_insights** — 4-5 specific, actionable insights about research gaps, underexplored organisms, missing experimental conditions, or temporal patterns. Each insight should be 1-2 sentences.
+
+3. **future_directions** — 4-5 concrete suggestions for future research directions based on the gaps identified. Include specific organisms, experimental approaches, or research questions.
+
+4. **priority_areas** — 3-4 high-priority research areas that would have the most scientific impact if pursued, with brief justification.
+
+Return ONLY valid JSON:
+{{
+  "semantic_analysis": "<string>",
+  "key_insights": [<strings>],
+  "future_directions": [<strings>],
+  "priority_areas": [<strings>]
+}}
+
+Be specific, scientific, and actionable. Focus on space biology context."""
+    
+    try:
+        payload = {
+            "contents": [{
+                "parts": [{"text": prompt}]
+            }]
+        }
+        response = requests.post(GEMINI_API_URL, json=payload, timeout=40)
+        response.raise_for_status()
+        
+        result = response.json()
+        result_text = result["candidates"][0]["content"]["parts"][0]["text"].strip()
+        
+        print(f"[DEBUG] Research Gap Analysis Response:\n{result_text}\n")
+        
+        # Parse JSON from response
+        if result_text.startswith("```"):
+            lines = result_text.split('\n')
+            json_lines = []
+            in_block = False
+            for line in lines:
+                if line.strip().startswith("```"):
+                    in_block = not in_block
+                    continue
+                if in_block:
+                    json_lines.append(line)
+            result_text = '\n'.join(json_lines)
+        
+        parsed = json.loads(result_text)
+        return ResearchGapResponse(
+            semantic_analysis=parsed.get("semantic_analysis", ""),
+            key_insights=parsed.get("key_insights", [])[:5],
+            future_directions=parsed.get("future_directions", [])[:5],
+            priority_areas=parsed.get("priority_areas", [])[:4]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Gap analysis failed: {str(e)}")
 
 @app.get("/health")
 async def health():
