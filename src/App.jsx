@@ -12,14 +12,6 @@ import UploadSummarize from "./components/UploadSummarize"
 
 export default function App() {
   const [activePage, setActivePage] = useState('dashboard')
-  
-  const handlePageChange = (page) => {
-    setActivePage(page)
-    // 立即滚动到顶部，不使用动画
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
-  }
   const { 
     query, 
     setQuery, 
@@ -54,6 +46,22 @@ export default function App() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Scroll to top when switching to ailab, scroll to content when switching to dashboard
+  useEffect(() => {
+    if (activePage === 'ailab') {
+      window.scrollTo(0, 0)
+    } else if (activePage === 'dashboard') {
+      // 先滚动到顶部，然后滚动到正文区域（跳过全屏Hero）
+      window.scrollTo(0, 0)
+      setTimeout(() => {
+        window.scrollTo({
+          top: window.innerHeight,
+          behavior: 'smooth'
+        })
+      }, 300)
+    }
+  }, [activePage])
+
   useEffect(() => {
     console.log("Filtered Publications:", filteredPublications)
     console.log("All Filtered Publications:", allFilteredPublications)
@@ -87,9 +95,12 @@ export default function App() {
               </div>
               <div className="flex items-center space-x-6 text-sm">
                 <button 
-                  onClick={() => handlePageChange('dashboard')}
-                  className="px-3 py-1.5 rounded-lg transition text-slate-300 hover:text-white hover:bg-white/10"
+                  onClick={() => setActivePage('dashboard')}
+                  className="px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 text-slate-300 hover:text-white hover:bg-white/10"
                 >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
                   Dashboard
                 </button>
                 <button 
@@ -105,9 +116,7 @@ export default function App() {
           </div>
         </div>
         
-        <div className="pt-20">
-          <AILabPage corpus={mockPubs} />
-        </div>
+        <AILabPage corpus={mockPubs} />
         <Footer />
       </div>
     )
@@ -117,7 +126,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen text-white flex flex-col">
       {/* Hero Header - Full Screen */}
-      <HeroHeader currentPage={activePage} onNavigate={handlePageChange} />
+      <HeroHeader currentPage={activePage} onNavigate={setActivePage} />
       
       {/* Main Content with Original Background */}
       <div className="relative flex-1">

@@ -122,7 +122,7 @@ export default function AILabPage({ corpus = [] }) {
   }
 
   return (
-    <div className="min-h-screen text-white relative">
+    <div className="min-h-screen text-white relative pt-[64px]">
       {/* Background Video */}
       <video
         autoPlay
@@ -134,28 +134,32 @@ export default function AILabPage({ corpus = [] }) {
         Your browser does not support the video tag.
       </video>
       
-      <div className="max-w-7xl mx-auto px-6 pt-6 pb-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              PDF Analyzer
-            </h1>
-            <p className="text-slate-400 mt-1">Upload documents for intelligent analysis and discovery</p>
+      {/* Header */}
+      <div className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                PDF Analyzer
+              </h1>
+              <p className="text-slate-400 mt-1">Upload documents for intelligent analysis and discovery</p>
+            </div>
+            {summary && (
+              <button 
+                onClick={handleClear}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Clear & Start Over
+              </button>
+            )}
           </div>
-          {summary && (
-            <button 
-              onClick={handleClear}
-              className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition flex items-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-              Clear & Start Over
-            </button>
-          )}
         </div>
-        
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Upload & Summary */}
           <div className="lg:col-span-2 space-y-6">
