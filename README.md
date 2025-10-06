@@ -7,6 +7,8 @@ An interactive web application that leverages AI to explore, summarize, and anal
 ![Python](https://img.shields.io/badge/Python-3.10+-green)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
+Project Detail Description: https://docs.google.com/document/d/1uAcnC263qhUb7thO46WZlE6nJivdbXp9iV9nPuOsbt0/edit?tab=t.0
+
 ---
 
 ## ✨ Features
