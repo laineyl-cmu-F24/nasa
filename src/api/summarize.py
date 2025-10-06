@@ -5,6 +5,9 @@ import os
 import json
 import requests
 from dotenv import load_dotenv
+from pathlib import Path
+from fastapi.responses import FileResponse
+from starlette.staticfiles import StaticFiles
 
 load_dotenv()
 
@@ -22,6 +25,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve built frontend (Vite) if available
+REPO_ROOT = Path(__file__).resolve().parents[2]
+DIST_DIR = REPO_ROOT / "dist"
+INDEX_FILE = DIST_DIR / "index.html"
+
+if INDEX_FILE.exists():
+    app.mount("/", StaticFiles(directory=str(DIST_DIR), html=True), name="static")
 
 # Configure Gemini
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")

@@ -1,27 +1,12 @@
 services:
   - type: web
-    name: nasa-bioscience-api
+    name: nasa-bioscience-app
     env: python
-    rootDir: src/api
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn summarize:app --host 0.0.0.0 --port 8000"
+    buildCommand: "npm ci && npm run build && cd src/api && pip install -r requirements.txt"
+    startCommand: "cd src/api && uvicorn summarize:app --host 0.0.0.0 --port 10000"
     envVars:
       - key: GEMINI_API_KEY
         sync: false
       - key: ALLOWED_ORIGINS
         value: "*"
-
-  - type: web
-    name: nasa-bioscience-web
-    env: node
-    buildCommand: "npm ci && npm run build"
-    startCommand: "npm run preview -- --host 0.0.0.0 --port 10000"
-    envVars:
-      - key: VITE_API_BASE_URL
-        fromService:
-          name: nasa-bioscience-api
-          type: web
-          property: host
-          # Render doesn't support direct cross-service env interpolation in Vite at build
-          # You may set this manually after deploy to: https://${nasa-bioscience-api.onrender.com}
 

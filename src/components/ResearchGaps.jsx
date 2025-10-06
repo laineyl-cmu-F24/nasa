@@ -111,7 +111,8 @@ export default function ResearchGaps({ publications }) {
     setError(null)
     
     try {
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+      const isProd = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+      const apiBase = import.meta.env.VITE_API_BASE_URL || (isProd ? '' : 'http://localhost:8000')
       const response = await fetch(`${apiBase}/api/analyze-gaps`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
