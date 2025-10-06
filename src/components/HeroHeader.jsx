@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { ChevronDown, Search, Database, TrendingUp } from 'lucide-react'
 
-export default function HeroHeader({ onScrollToContent }) {
+export default function HeroHeader({ onScrollToContent, currentPage = 'dashboard', onNavigate }) {
   const [scrollY, setScrollY] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false)
   const [hasAutoScrolled, setHasAutoScrolled] = useState(false)
@@ -95,10 +95,30 @@ export default function HeroHeader({ onScrollToContent }) {
                   Bioscience Dashboard
                 </h2>
               </div>
-              <div className="flex items-center space-x-6 text-sm text-slate-300">
-                <span>Smart Search</span>
-                <span>Rich Data</span>
-                <span>Research Insights</span>
+              <div className="flex items-center space-x-6 text-sm">
+                <button 
+                  onClick={() => onNavigate?.('dashboard')}
+                  className={`px-3 py-1.5 rounded-lg transition ${
+                    currentPage === 'dashboard' 
+                      ? 'bg-white/20 text-white font-semibold' 
+                      : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  Dashboard
+                </button>
+                <button 
+                  onClick={() => onNavigate?.('ailab')}
+                  className={`px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 ${
+                    currentPage === 'ailab' 
+                      ? 'bg-white/20 text-white font-semibold' 
+                      : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  PDF Analyzer
+                </button>
               </div>
             </div>
           </div>

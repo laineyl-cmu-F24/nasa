@@ -139,142 +139,141 @@ export default function UploadSummarize({ corpus, onAddToBoard }) {
     localStorage.setItem('upload_expanded', newState.toString())
   }
 
-  return (
-    <div className="bg-slate-700 rounded-xl p-6">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl font-semibold">Upload & Summarize</h2>
-          <button 
-            onClick={toggleExpanded} 
-            className="text-slate-400 hover:text-slate-200 transition"
-            aria-label={isExpanded ? "Collapse" : "Expand"}
-          >
-            {isExpanded ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            )}
-          </button>
-        </div>
-        {(summary || recommendations.length > 0) && (
-          <button 
-            onClick={handleClear} 
-            className="px-3 py-1.5 text-sm bg-slate-600 hover:bg-slate-500 rounded"
-          >
-            Clear
-          </button>
-        )}
-      </div>
+  return ( null)
+    // <div className="bg-slate-700 rounded-xl p-6">
+    //   <div className="flex items-center justify-between mb-3">
+    //     <div className="flex items-center gap-3">
+    //       <h2 className="text-xl font-semibold">Upload & Summarize</h2>
+    //       <button 
+    //         onClick={toggleExpanded} 
+    //         className="text-slate-400 hover:text-slate-200 transition"
+    //         aria-label={isExpanded ? "Collapse" : "Expand"}
+    //       >
+    //         {isExpanded ? (
+    //           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    //             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    //           </svg>
+    //         ) : (
+    //           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    //             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    //           </svg>
+    //         )}
+    //       </button>
+    //     </div>
+    //     {(summary || recommendations.length > 0) && (
+    //       <button 
+    //         onClick={handleClear} 
+    //         className="px-3 py-1.5 text-sm bg-slate-600 hover:bg-slate-500 rounded"
+    //       >
+    //         Clear
+    //       </button>
+    //     )}
+    //   </div>
       
-      {isExpanded && (
-        <>
-          <div
-            className="border border-dashed border-slate-500 rounded p-6 text-slate-300 text-sm hover:bg-slate-600/20 cursor-pointer"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => { e.preventDefault(); handleFiles(e.dataTransfer.files) }}
-            onClick={() => {
-              const input = document.createElement('input')
-              input.type = 'file'
-              input.accept = '.pdf,.txt,.md'
-              input.onchange = (e) => handleFiles(e.target.files)
-              input.click()
-            }}
-          >
-            Drag & drop a PDF/TXT here, or click to select
-          </div>
-          {fileName && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              <span className="font-medium">{fileName}</span>
-            </div>
-          )}
-          {status && <p className="text-xs text-slate-400 mt-2">{status}</p>}
-          {summary && (
-        <div className="mt-4 space-y-3">
-          {summary.tldr && (
-            <div>
-              <h3 className="text-sm font-medium text-slate-300 mb-1">TL;DR</h3>
-              <p className="text-slate-200 text-sm leading-6">{summary.tldr}</p>
-            </div>
-          )}
-          {summary.objectives?.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-slate-300 mb-1">Mission Objectives</h3>
-              <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
-                {summary.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
-              </ul>
-            </div>
-          )}
-          {summary.science?.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-slate-300 mb-1">Scientific Focus</h3>
-              <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
-                {summary.science.map((sci, i) => <li key={i}>{sci}</li>)}
-              </ul>
-            </div>
-          )}
-          {summary.timeline?.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-slate-300 mb-1">Timeline Highlights</h3>
-              <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
-                {summary.timeline.map((time, i) => <li key={i}>{time}</li>)}
-              </ul>
-            </div>
-          )}
-          {summary.keywords?.length > 0 && (
-            <div>
-              <h3 className="text-sm font-medium text-slate-300 mb-1">Keywords</h3>
-              <div className="flex flex-wrap gap-2">
-                {summary.keywords.map((kw, i) => (
-                  <span key={i} className="inline-flex items-center rounded-full bg-slate-600/60 text-slate-200 px-2 py-0.5 text-xs">
-                    {kw}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-          {recommendations.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-sm font-medium text-slate-300 mb-2">Similar Publications</h3>
-              <div className="space-y-2">
-                {recommendations.map((p, idx) => (
-                  <div key={`${p.link}-${idx}`} className="bg-slate-600/40 rounded p-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="font-medium">{p.title}</div>
-                        <div className="text-xs text-slate-300 mt-1">{p.year ?? 'n/a'} · {p.organism} · {p.outcome}</div>
-                      </div>
-                      {onAddToBoard && (
-                        <button onClick={() => onAddToBoard(p)} className="text-xs bg-slate-700 hover:bg-slate-600 rounded px-2 py-1 ml-2">Add to Board</button>
-                      )}
-                    </div>
-                    {p.link && (
-                      <a 
-                        href={p.link} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-yellow-400 hover:text-yellow-300 underline text-xs inline-block mt-2"
-                      >
-                        View Publication →
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  )
+    //   {isExpanded && (
+    //     <>
+    //       <div
+    //         className="border border-dashed border-slate-500 rounded p-6 text-slate-300 text-sm hover:bg-slate-600/20 cursor-pointer"
+    //         onDragOver={(e) => e.preventDefault()}
+    //         onDrop={(e) => { e.preventDefault(); handleFiles(e.dataTransfer.files) }}
+    //         onClick={() => {
+    //           const input = document.createElement('input')
+    //           input.type = 'file'
+    //           input.accept = '.pdf,.txt,.md'
+    //           input.onchange = (e) => handleFiles(e.target.files)
+    //           input.click()
+    //         }}
+    //       >
+    //         Drag & drop a PDF/TXT here, or click to select
+    //       </div>
+    //       {fileName && (
+    //         <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
+    //           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    //             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    //           </svg>
+    //           <span className="font-medium">{fileName}</span>
+    //         </div>
+    //       )}
+    //       {status && <p className="text-xs text-slate-400 mt-2">{status}</p>}
+    //       {summary && (
+    //     <div className="mt-4 space-y-3">
+    //       {summary.tldr && (
+    //         <div>
+    //           <h3 className="text-sm font-medium text-slate-300 mb-1">TL;DR</h3>
+    //           <p className="text-slate-200 text-sm leading-6">{summary.tldr}</p>
+    //         </div>
+    //       )}
+    //       {summary.objectives?.length > 0 && (
+    //         <div>
+    //           <h3 className="text-sm font-medium text-slate-300 mb-1">Mission Objectives</h3>
+    //           <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
+    //             {summary.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
+    //           </ul>
+    //         </div>
+    //       )}
+    //       {summary.science?.length > 0 && (
+    //         <div>
+    //           <h3 className="text-sm font-medium text-slate-300 mb-1">Scientific Focus</h3>
+    //           <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
+    //             {summary.science.map((sci, i) => <li key={i}>{sci}</li>)}
+    //           </ul>
+    //         </div>
+    //       )}
+    //       {summary.timeline?.length > 0 && (
+    //         <div>
+    //           <h3 className="text-sm font-medium text-slate-300 mb-1">Timeline Highlights</h3>
+    //           <ul className="list-disc list-inside space-y-1 text-slate-200 text-sm">
+    //             {summary.timeline.map((time, i) => <li key={i}>{time}</li>)}
+    //           </ul>
+    //         </div>
+    //       )}
+    //       {summary.keywords?.length > 0 && (
+    //         <div>
+    //           <h3 className="text-sm font-medium text-slate-300 mb-1">Keywords</h3>
+    //           <div className="flex flex-wrap gap-2">
+    //             {summary.keywords.map((kw, i) => (
+    //               <span key={i} className="inline-flex items-center rounded-full bg-slate-600/60 text-slate-200 px-2 py-0.5 text-xs">
+    //                 {kw}
+    //               </span>
+    //             ))}
+    //           </div>
+    //         </div>
+    //       )}
+    //     </div>
+    //   )}
+    //       {recommendations.length > 0 && (
+    //         <div className="mt-4">
+    //           <h3 className="text-sm font-medium text-slate-300 mb-2">Similar Publications</h3>
+    //           <div className="space-y-2">
+    //             {recommendations.map((p, idx) => (
+    //               <div key={`${p.link}-${idx}`} className="bg-slate-600/40 rounded p-3">
+    //                 <div className="flex items-start justify-between">
+    //                   <div className="flex-1">
+    //                     <div className="font-medium">{p.title}</div>
+    //                     <div className="text-xs text-slate-300 mt-1">{p.year ?? 'n/a'} · {p.organism} · {p.outcome}</div>
+    //                   </div>
+    //                   {onAddToBoard && (
+    //                     <button onClick={() => onAddToBoard(p)} className="text-xs bg-slate-700 hover:bg-slate-600 rounded px-2 py-1 ml-2">Add to Board</button>
+    //                   )}
+    //                 </div>
+    //                 {p.link && (
+    //                   <a 
+    //                     href={p.link} 
+    //                     target="_blank" 
+    //                     rel="noopener noreferrer"
+    //                     className="text-yellow-400 hover:text-yellow-300 underline text-xs inline-block mt-2"
+    //                   >
+    //                     View Publication →
+    //                   </a>
+    //                 )}
+    //               </div>
+    //             ))}
+    //           </div>
+    //         </div>
+    //       )}
+    //     </>
+    //   )}
+    // </div>
 }
 
 
