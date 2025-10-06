@@ -58,7 +58,7 @@ export default function App() {
           top: window.innerHeight,
           behavior: 'smooth'
         })
-      }, 300)
+      }, 400)
     }
   }, [activePage])
 
@@ -136,7 +136,7 @@ export default function App() {
           muted
           playsInline
           className="absolute inset-0 w-full h-full object-cover object-top -z-10">
-          <source src="src/galaxy_space.mp4" type="video/mp4" />
+          <source src="/galaxy_space.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
         

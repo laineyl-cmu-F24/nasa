@@ -130,7 +130,7 @@ export default function AILabPage({ corpus = [] }) {
         muted
         playsInline
         className="fixed inset-0 w-full h-full object-cover object-center -z-10">
-        <source src="src/galaxy_space.mp4" type="video/mp4" />
+        <source src="/galaxy_space.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       
