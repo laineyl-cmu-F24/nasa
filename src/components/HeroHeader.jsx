@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ChevronDown, Search, Database, TrendingUp } from 'lucide-react'
+import { ChevronDown, Search, Database, TrendingUp, Zap } from 'lucide-react'
 
 export default function HeroHeader({ onScrollToContent, currentPage = 'dashboard', onNavigate }) {
   const [scrollY, setScrollY] = useState(0)
@@ -184,7 +184,7 @@ export default function HeroHeader({ onScrollToContent, currentPage = 'dashboard
 
         {/* Feature Cards */}
         <div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 max-w-6xl mx-auto"
           style={{
             transform: hasAutoScrolled
               ? `translateY(${scrollY * 0.2}px) scale(${Math.max(0.9, 1 - scrollY * 0.0002)})`
@@ -206,8 +206,13 @@ export default function HeroHeader({ onScrollToContent, currentPage = 'dashboard
           </div>
           <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
             <TrendingUp className="w-8 h-8 text-blue-400 mx-auto mb-3" />
-            <h3 className="text-white font-semibold mb-2">Research Insights</h3>
-            <p className="text-slate-300 text-sm">Discover patterns and gaps in space biology research</p>
+            <h3 className="text-white font-semibold mb-2">AI Gap Analysis</h3>
+            <p className="text-slate-300 text-sm">Intelligent research gap detection with future direction insights</p>
+          </div>
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+            <Zap className="w-8 h-8 text-purple-400 mx-auto mb-3" />
+            <h3 className="text-white font-semibold mb-2">AI PDF Analyzer</h3>
+            <p className="text-slate-300 text-sm">Upload documents for AI-powered summarization and analysis</p>
           </div>
         </div>
 

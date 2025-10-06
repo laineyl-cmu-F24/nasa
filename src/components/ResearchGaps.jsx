@@ -1,6 +1,17 @@
 import { useState, useEffect } from "react"
 import { Microscope, Sparkles, TrendingUp, Target, AlertCircle, RefreshCw } from "lucide-react"
 
+// Remove markdown formatting from text
+function cleanMarkdown(text) {
+  if (!text) return text
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1')  // Remove bold **text**
+    .replace(/__(.*?)__/g, '$1')       // Remove bold __text__
+    .replace(/\*(.*?)\*/g, '$1')       // Remove italic *text*
+    .replace(/_(.*?)_/g, '$1')         // Remove italic _text_
+    .trim()
+}
+
 function detectGaps(publications, { lowCountThreshold = 10, recentYears = 10 } = {}) {
   const gaps = []
   const pubs = Array.isArray(publications) ? publications : []
@@ -112,7 +123,14 @@ export default function ResearchGaps({ publications }) {
       if (!response.ok) throw new Error(`API error: ${response.status}`)
       
       const data = await response.json()
-      setAiAnalysis(data)
+      // Clean markdown formatting from all text fields
+      const cleanedData = {
+        semantic_analysis: cleanMarkdown(data.semantic_analysis),
+        key_insights: (data.key_insights || []).map(cleanMarkdown),
+        future_directions: (data.future_directions || []).map(cleanMarkdown),
+        priority_areas: (data.priority_areas || []).map(cleanMarkdown)
+      }
+      setAiAnalysis(cleanedData)
       setShowAI(true)
     } catch (e) {
       console.warn('AI analysis unavailable:', e)

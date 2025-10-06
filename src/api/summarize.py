@@ -164,6 +164,7 @@ Return ONLY valid JSON:
   "priority_areas": [<strings>]
 }}
 
+IMPORTANT: Do NOT use markdown formatting (**, __, etc.) in your response strings. Use plain text only.
 Be specific, scientific, and actionable. Focus on space biology context."""
     
     try:
