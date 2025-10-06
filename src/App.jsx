@@ -7,6 +7,7 @@ import ResearchGaps from "./components/ResearchGaps"
 import Footer from "./components/Footer"
 import { useSearch } from "./hooks/useSearch"
 import { mockPubs } from "./data/data"
+import UploadSummarize from "./components/UploadSummarize"
 
 export default function App() {
   const { 
@@ -81,14 +82,20 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <PublicationResults 
-              publications={filteredPublications}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalItems={totalItems}
-              itemsPerPage={itemsPerPage}
-              onPageChange={onPageChange}
-            />
+            <div className="md:col-span-2 space-y-6">
+              <PublicationResults 
+                publications={filteredPublications}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                itemsPerPage={itemsPerPage}
+                onPageChange={onPageChange}
+              />
+              
+              {/* Upload & Summarize moved below search results */}
+              <UploadSummarize corpus={allFilteredPublications} />
+            </div>
+            
             <div className="space-y-6">
               <OrganismChart data={dynamicOrganismStats} />
               <ResearchGaps publications={allFilteredPublications} />
