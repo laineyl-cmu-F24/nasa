@@ -19,8 +19,6 @@ export default function OrganismChart({ data }) {
       }))
   }, [data, COLORS])
 
-  // 使用默认标签，避免复杂布局导致裁切
-
   return (
     <div className="bg-slate-700 rounded-xl p-6 shadow" style={{ height: 520 }}>
       <h2 className="text-xl font-semibold mb-4">Organism Distribution</h2>

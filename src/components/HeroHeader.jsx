@@ -30,7 +30,6 @@ export default function HeroHeader({ onScrollToContent, currentPage = 'dashboard
       setScrollY(currentScrollY)
       setIsScrolled(currentScrollY > 5)
       
-      // 第一次滚动时触发自动滚动效果
       if (currentScrollY > 0 && currentScrollY < window.innerHeight && !hasAutoScrolled) {
         setHasAutoScrolled(true)
         // Custom smooth scroll from current position
@@ -99,13 +98,11 @@ export default function HeroHeader({ onScrollToContent, currentPage = 'dashboard
                 <button 
                   onClick={() => {
                     if (currentPage === 'dashboard') {
-                      // 如果已经在Dashboard页面，滚动到正文部分
                       window.scrollTo({
                         top: window.innerHeight,
                         behavior: 'smooth'
                       })
                     } else {
-                      // 否则切换到Dashboard页面
                       onNavigate?.('dashboard')
                     }
                   }}
